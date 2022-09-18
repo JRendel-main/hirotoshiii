@@ -1,19 +1,32 @@
-import smtplib, ssl
+import smtplib
+import imghdr
+from email.message import EmailMessage
 
-port = 465  # For SSL
-smtp_server = "smtp.gmail.com"
-sender_email = "hirotoshitest@gmail.com"  # Enter your address
-# Enter receiver address
-password = 'nhqdiwtariodmlxy'
+Sender_Email = "hirotoshitest@gmail.com"
+Password = 'nhqdiwtariodmlxy'
 
-receiver_email = input('Enter Recipeint gmail here: ')
-message = input('Enter your message here: ')
-message = """\
-Subject: Hi there
+Reciever_Email = input('Enter recepient email here: ')
+headMsg = input('Enter header Here: ')
+bodyMsg = input('Enter body message here: ')
 
-{}""".format(message)
 
-context = ssl.create_default_context()
-with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-    server.login(sender_email, password)
-    server.sendmail(sender_email, receiver_email, message)
+newMessage = EmailMessage()                         
+newMessage['Subject'] = headMsg 
+newMessage['From'] = Sender_Email                   
+newMessage['To'] = Reciever_Email                   
+newMessage.set_content(bodyMsg) 
+
+files = ['testing.png']
+
+for file in files:
+    with open(file, 'rb') as f:
+        image_data = f.read()
+        image_type = imghdr.what(f.name)
+        image_name = f.name
+    newMessage.add_attachment(image_data, maintype='image', subtype=image_type, filename=image_name)
+
+with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+    
+    smtp.login(Sender_Email, Password)              
+    smtp.send_message(newMessage)
+    print('Email Successfully sent')                   

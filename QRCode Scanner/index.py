@@ -82,8 +82,9 @@ def GmailSend():
     password = 'nhqdiwtariodmlxy'
     message = """\
     Subject: Hi there
-    
-    """
+
+    Hello {} this is a test!
+    """.format(student_number.get())
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login(sender_email, password)
